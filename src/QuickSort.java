@@ -1,53 +1,50 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class QuickSort {
+	private static Random random = new Random();
+
 	public static void main(String[] args) {
-		int[] x = { 9, 2, 4, 7, 3, 7, 10 };
-		System.out.println(Arrays.toString(x));
- 
-		int low = 0;
-		int high = x.length - 1;
- 
-		quickSort(x, low, high);
-		System.out.println(Arrays.toString(x));
+		int[] nums = { 9, 2, 4, 7, 3, 6, 10 };
+
+		quickSort(nums);
+		System.out.println(Arrays.toString(nums));
 	}
  
-	public static void quickSort(int[] arr, int low, int high) {
-		if (arr == null || arr.length == 0)
+	private static void quickSort(int[] nums) {
+		quickSort(nums, 0, nums.length - 1);
+	}
+
+	private static void quickSort(int[] nums, int start, int end) {
+		if (start >= end) {
 			return;
- 
-		if (low >= high)
-			return;
- 
-		// pick the pivot
-		int middle = low + (high - low) / 2;
-		int pivot = arr[middle];
- 
-		// make left < pivot and right > pivot
-		int i = low, j = high;
-		while (i <= j) {
-			while (arr[i] < pivot) {
+		}
+		int index = randomPartition(nums, start, end);
+		quickSort(nums, start, index - 1);
+		quickSort(nums, index + 1, end);
+	}
+
+	private static int randomPartition(int[] nums, int start, int end) {
+		int index = random.nextInt(end - start + 1) + start;
+		swap(nums, index, end);
+		return partition(nums, start, end);
+	}
+
+	private static int partition(int[] nums, int start, int end) {
+		int i = start;
+		for (int j = start; j < end; j++) {
+			if (nums[j] < nums[end]) {
+				swap(nums, i, j);
 				i++;
-			}
- 
-			while (arr[j] > pivot) {
-				j--;
-			}
- 
-			if (i <= j) {
-				int temp = arr[i];
-				arr[i] = arr[j];
-				arr[j] = temp;
-				i++;
-				j--;
 			}
 		}
- 
-		// recursively sort two sub parts
-		if (low < j)
-			quickSort(arr, low, j);
- 
-		if (high > i)
-			quickSort(arr, i, high);
+		swap(nums, i, end);
+		return i;
+	}
+
+	private static void swap(int[] nums, int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
 	}
 }
